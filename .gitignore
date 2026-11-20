@@ -1,0 +1,9 @@
+# Ignored setup and personal notes
+Git.txt
+
+# OS and temporary files
+Thumbs.db
+.DS_Store
+~$*
+__pycache__/
+*.pyc

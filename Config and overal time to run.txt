@@ -1,0 +1,33 @@
+[Config Evaluation_Frequency]
+description = "Runs 5 repetitions with different seeds across OMNeT++-SUMO synchronization frequencies (0.1Hz, 1Hz, 10Hz, 100Hz) at 1600s"
+extends = WithBeaconing
+repeat = 5
+seed-set = ${repetition}
+sim-time-limit = 400s
+*.manager.updateInterval = (1s / ${frequency = 0.1, 1, 10, 100})
+
+=========================================================================
+
+TRACI RUN:
+source /mnt/f/Omnet/omnetpp-6.2.0/setenv
+cd "/mnt/f/VEINS/veins-master/examples/veins"
+opp_run -u Cmdenv -l ../../src/veins -n .:../../src/veins omnetpp.ini -c Evaluation_Frequency | awk 'BEGIN { print "SEED,FREQUENCY,TIME" } /Scenario:/ { for(i=1;i<=NF;i++) { if($i ~ /\$frequency=/) { f=$i; gsub(/\$frequency=|,/, "", f); } if($i ~ /\$repetition=/) { s=$i; gsub(/\$repetition=|,/, "", s); } } } /100% completed/ { gsub(/s/, "", $6); print s "," f "," $6; fflush(); }' > traci_frequency.csv
+=========================================================================
+
+GRPC RUN:
+source /mnt/f/Omnet/omnetpp-6.2.0/setenv
+cd "/mnt/f/4. Academic(MSc)/Thesis/Thesis-veins-with-gRPC/veins/examples/veins"
+opp_run -u Cmdenv -l ../../src/veins -n .:../../src/veins omnetpp.ini -c Evaluation_Frequency | awk 'BEGIN { print "SEED,FREQUENCY,TIME" } /Scenario:/ { for(i=1;i<=NF;i++) { if($i ~ /\$frequency=/) { f=$i; gsub(/\$frequency=|,/, "", f); } if($i ~ /\$repetition=/) { s=$i; gsub(/\$repetition=|,/, "", s); } } } /100% completed/ { gsub(/s/, "", $6); print s "," f "," $6; fflush(); }' > grpc_frequency.csv
+=========================================================================
+
+LIBSUMO RUN
+source /mnt/f/Omnet/omnetpp-6.2.0/setenv
+cd "/mnt/f/4. Academic(MSc)/Thesis/Thesis-veins-with-libsumo/veins-master/examples/veins"
+opp_run -u Cmdenv -l ../../src/veins -n .:../../src/veins omnetpp.ini -c Evaluation_Frequency | awk 'BEGIN { print "SEED,FREQUENCY,TIME" } /Scenario:/ { for(i=1;i<=NF;i++) { if($i ~ /\$frequency=/) { f=$i; gsub(/\$frequency=|,/, "", f); } if($i ~ /\$repetition=/) { s=$i; gsub(/\$repetition=|,/, "", s); } } } /100% completed/ { gsub(/s/, "", $6); print s "," f "," $6; fflush(); }' > libsumo_frequency.csv
+=========================================================================
+
+#################################################
+TOTAL TIME TAKEN BY TRACI = 
+TOTAL TIME TAKEN BY GRPC = 
+TOTAL TIME TAKEN BY LIBSUMO = 
+#################################################
